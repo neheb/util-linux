@@ -1374,15 +1374,20 @@ if opt and not is_disabler(exe)
   bashcompletions += ['chmem']
 endif
 
+opt = not get_option('build-choom').disabled()
 exe = executable(
   'choom',
   choom_sources,
   include_directories : includes,
   link_with : [lib_common],
   install_dir : usrbin_exec_dir,
-  install : true)
-exes += exe
-manadocs += ['sys-utils/choom.1.adoc']
+  install : opt,
+  build_by_default : opt)
+if opt and not is_disabler(exe)
+  exes += exe
+  manadocs += ['sys-utils/choom.1.adoc']
+  bashcompletions += ['choom']
+endif
 
 has_seminfo_type = cc.has_type('struct seminfo', args : '-D_GNU_SOURCE', prefix : '#include <sys/sem.h>')
 
@@ -2170,16 +2175,20 @@ if opt and not is_disabler(exe)
   bashcompletions += ['mkfs.bfs']
 endif
 
+opt = not get_option('build-isosize').disabled()
 exe = executable(
   'isosize',
   isosize_sources,
   include_directories : includes,
   link_with : [lib_common],
   install_dir : usrbin_exec_dir,
-  install : true)
-exes += exe
-manadocs += ['disk-utils/isosize.8.adoc']
-bashcompletions += ['isosize']
+  install : opt,
+  build_by_default : opt)
+if opt and not is_disabler(exe)
+  exes += exe
+  manadocs += ['disk-utils/isosize.8.adoc']
+  bashcompletions += ['isosize']
+endif
 
 exe = executable(
   'mkswap',
@@ -2563,6 +2572,7 @@ if opt and not is_disabler(exe)
   bashcompletions += ['scriptlive']
 endif
 
+opt = get_option('build-scriptreplay').allowed()
 exe = executable(
   'scriptreplay',
   scriptreplay_sources,
@@ -2570,10 +2580,13 @@ exe = executable(
   link_with : [lib_common],
   dependencies : [math_libs],
   install_dir : usrbin_exec_dir,
-  install : true)
-exes += exe
-manadocs += ['term-utils/scriptreplay.1.adoc']
-bashcompletions += ['scriptreplay']
+  install : opt,
+  build_by_default : opt)
+if opt and not is_disabler(exe)
+  exes += exe
+  manadocs += ['term-utils/scriptreplay.1.adoc']
+  bashcompletions += ['scriptreplay']
+endif
 
 opt = not get_option('build-agetty').disabled()
 exe = executable(
@@ -3142,19 +3155,19 @@ if opt and not is_disabler(exe)
   bashcompletions += ['fadvise']
 endif
 
-if LINUX and conf.get('HAVE_PIDFD_OPEN').to_string() == '1'
-  exe = executable(
-    'waitpid',
-    waitpid_sources,
-    include_directories : includes,
-    link_with : [lib_common],
-    install_dir : usrbin_exec_dir,
-    install : true)
-  if not is_disabler(exe)
-    exes += exe
-    manadocs += ['misc-utils/waitpid.1.adoc']
-    bashcompletions += ['waitpid']
-  endif
+opt = get_option('build-waitpid').require(LINUX and conf.get('HAVE_PIDFD_OPEN').to_string() == '1').allowed()
+exe = executable(
+  'waitpid',
+  waitpid_sources,
+  include_directories : includes,
+  link_with : [lib_common],
+  install_dir : usrbin_exec_dir,
+  install : opt,
+  build_by_default : opt)
+if opt and not is_disabler(exe)
+  exes += exe
+  manadocs += ['misc-utils/waitpid.1.adoc']
+  bashcompletions += ['waitpid']
 endif
 
 syscalls_h = custom_target('syscalls.h',

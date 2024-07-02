@@ -73,10 +73,18 @@ option('build-script', type : 'feature',
        description : 'build script')
 option('build-scriptlive', type : 'feature',
        description : 'build scriptlive')
+option('build-scriptreplay', type : 'feature',
+       description : 'build scriptreplay')
 
 option('build-uuidd', type : 'feature',
        description : 'build the uuid daemon')
 
+option('build-choom', type : 'feature',
+       description : 'build choom')
+option('build-isosize', type : 'feature',
+       description : 'build isosize')
+option('build-waitpid', type : 'feature',
+       description : 'build isosize')
 option('build-wipefs', type : 'feature',
        description : 'build wipefs')
 option('build-mountpoint', type : 'feature',
